@@ -1,20 +1,8 @@
 [
   {
-    "slug": "day-3-advanced-evasion-techniques",
-    "title": "Day 3: Advanced Evasion Techniques",
+    "slug": "the-beginning",
+    "title": "Day 1 of Cyber",
     "date": "2025-09-04",
-    "excerpt": "Diving deep into sandbox detection and anti-debugging tricks. We explored how malware identifies virtual environments and alters its behavior to avoid analysis. The complexity is staggering."
-  },
-  {
-    "slug": "day-2-exploring-the-dark-web",
-    "title": "Day 2: Exploring the Dark Web Safely",
-    "date": "2025-09-03",
-    "excerpt": "Set up a secure environment using Tor and a hardened OS. The goal wasn't to browse illicit content, but to understand the infrastructure and the anonymity it provides. A fascinating look into a different side of the internet."
-  },
-  {
-    "slug": "day-1-of-cyber-and-this-is-how-its-going",
-    "title": "Day 1 of Cyber, and This is How It's Going",
-    "date": "2025-09-02",
-    "excerpt": "First day setting up my personal lab environment. Decided to go with Proxmox for virtualization. Spinning up a few VMs to act as my playground: Kali Linux, a vulnerable Windows instance, and a pfSense firewall..."
+    "excerpt": "The starting of something big :)"
   }
 ]
