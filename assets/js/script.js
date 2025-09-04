@@ -4,7 +4,7 @@
 
     // --- CONFIGURATION ---
     const POSTS_PER_PAGE = 10;
-    const POSTS_MANIFEST_URL = '/posts/posts.json'; // The heart of our "dynamic" static site
+    const POSTS_MANIFEST_URL = './posts/posts.json'; // The heart of our "dynamic" static site
 
     // --- STATE ---
     let allPosts = [];
@@ -30,14 +30,17 @@
     async function init() {
         // Common setup for all pages
         setupCopyrightYear();
-        document.body.classList.add('loaded'); // Trigger fade-in animation
 
         // Page-specific setup
-        if (postListEl) {
-            await initIndexPage();
-        } else if (postContentEl) {
+        if (postContentEl) { // This is a post page
             await initPostPage();
+        } else if (postListEl) { // This is the index page
+            await initIndexPage();
+            setupIndexPageAnimations();
         }
+        
+        // Trigger fade-in for the body on all pages
+        document.body.classList.add('loaded');
     }
     
     /**
@@ -57,7 +60,7 @@
             renderPage();
         } catch (error) {
             console.error("Error fetching or parsing posts manifest:", error);
-            if (loaderEl) loaderEl.innerHTML = `<p class="accent-text-amber">Error: Could not load post index. Please check the console.</p>`;
+            if (loaderEl) loaderEl.innerHTML = `<p class="text-yellow-500">Error: Could not load post index. Please check the console.</p>`;
         }
     }
 
@@ -74,7 +77,7 @@
         }
 
         try {
-            const response = await fetch(`/posts/${postSlug}.md`);
+            const response = await fetch(`./posts/${postSlug}.md`);
             if (!response.ok) throw new Error(`Post not found: ${postSlug}`);
             
             const markdown = await response.text();
@@ -87,12 +90,18 @@
             tempDiv.innerHTML = contentHtml;
 
             const postTitle = tempDiv.querySelector('h1')?.textContent || 'Untitled Post';
-            const postExcerpt = tempDiv.querySelector('p')?.textContent.substring(0, 150) + '...' || 'No excerpt available.';
+            const postExcerpt = tempDiv.querySelector('p')?.textContent.substring(0, 160) + '...' || 'No excerpt available.';
 
             // Update SEO and meta tags
             updateSEOTags(postTitle, postExcerpt, window.location.href);
 
             postContentEl.innerHTML = contentHtml;
+
+            // After inserting content, find all <pre><code> blocks and highlight them
+            postContentEl.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+
         } catch (error) {
             console.error("Error fetching post:", error);
             updateSEOTags("Error", "Could not load the post.", window.location.href);
@@ -109,18 +118,23 @@
         if (!postListEl || !paginationControlsEl) return;
         
         postListEl.innerHTML = ''; // Clear previous posts
-        loaderEl?.remove(); // Remove loader once we start rendering
+        if (loaderEl) loaderEl.style.display = 'none';
 
         const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE);
         
         if (filteredPosts.length === 0) {
-            noResultsEl.style.display = 'block';
+            if (noResultsEl) noResultsEl.style.display = 'block';
             paginationControlsEl.style.display = 'none';
             return;
         }
         
-        noResultsEl.style.display = 'none';
-        paginationControlsEl.style.display = 'flex';
+        if (noResultsEl) noResultsEl.style.display = 'none';
+        if (totalPages > 1) {
+            paginationControlsEl.style.display = 'flex';
+        } else {
+            paginationControlsEl.style.display = 'none';
+        }
+
 
         const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
         const endIndex = startIndex + POSTS_PER_PAGE;
@@ -139,32 +153,42 @@
     /**
      * Creates the HTML element for a single post preview on the homepage.
      * @param {object} post - The post object from the manifest.
-     * @returns {HTMLElement} The created article element.
+     * @returns {HTMLElement} The created anchor element.
      */
     function createPostElement(post) {
-        const article = document.createElement('article');
-        article.className = 'hacker-terminal p-6 transition-all duration-300 hover:border-accent-green hover:shadow-lg hover:shadow-green-500/10';
+        // The entire card is a link now
+        const link = document.createElement('a');
+        link.href = `./post.html?slug=${post.slug}`;
+        link.className = 'block slide-up post-card card-hover group';
         
         const formattedDate = new Date(post.date).toLocaleDateString('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit' });
 
-        article.innerHTML = `
+        link.innerHTML = `
             <header>
-                <time datetime="${post.date}" class="text-xs accent-text-amber tracking-widest">${formattedDate}</time>
-                <h2 class="mt-2 text-2xl font-bold accent-text-green">
-                    <a href="/post.html?slug=${post.slug}" class="hover:underline">${post.title}</a>
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
+                    <span class="font-mono">${formattedDate}</span>
+                </div>
+                <h2 class="mt-2 text-xl sm:text-2xl font-bold text-white transition-colors group-hover:text-cyan-400">
+                   ${post.title}
                 </h2>
             </header>
-            <p class="mt-4 text-gray-400 text-sm leading-relaxed">${post.excerpt}</p>
-            <a href="/post.html?slug=${post.slug}" class="inline-block mt-4 text-sm font-semibold accent-text-amber hover:accent-text-green transition-colors">read_more &gt;</a>
+            <p class="mt-4 text-gray-300 leading-relaxed">${post.excerpt}</p>
+            <div class="mt-6 flex items-center justify-end">
+                 <span class="text-cyan-400 transition-colors font-medium group-hover:underline">
+                    Read more →
+                </span>
+            </div>
         `;
-        return article;
+        return link;
     }
+
 
     /**
      * Updates the state and appearance of pagination buttons.
      * @param {number} totalPages - The total number of pages.
      */
     function updatePaginationControls(totalPages) {
+        if (!pageIndicatorEl || !prevPageBtn || !nextPageBtn) return;
         pageIndicatorEl.textContent = `Page ${currentPage} of ${totalPages}`;
         prevPageBtn.disabled = currentPage === 1;
         nextPageBtn.disabled = currentPage === totalPages;
@@ -177,7 +201,7 @@
      * @param {string} url - The canonical URL for the page.
      */
     function updateSEOTags(title, description, url) {
-        document.title = `${title} | Cyber Journal`;
+        document.title = `${title} | Hulo's Journal`;
         document.querySelector('meta[name="description"]')?.setAttribute('content', description);
         document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
         document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
@@ -191,9 +215,9 @@
      * Sets up all event listeners for the index page.
      */
     function setupEventListeners() {
-        searchBarEl.addEventListener('input', handleSearch);
-        prevPageBtn.addEventListener('click', handlePrevPage);
-        nextPageBtn.addEventListener('click', handleNextPage);
+        if (searchBarEl) searchBarEl.addEventListener('input', handleSearch);
+        if (prevPageBtn) prevPageBtn.addEventListener('click', handlePrevPage);
+        if (nextPageBtn) nextPageBtn.addEventListener('click', handleNextPage);
     }
 
     /**
@@ -244,9 +268,38 @@
             yearEl.textContent = new Date().getFullYear();
         }
     }
+
+    /**
+     * Sets up IntersectionObserver for scroll animations on the index page.
+     */
+    function setupIndexPageAnimations() {
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all elements with animation classes
+        document.querySelectorAll('.slide-up, .fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    }
     
     // --- INITIALIZATION ---
-    // Run the main initializer function when the DOM is fully loaded.
-    document.addEventListener('DOMContentLoaded', init);
+    // Run the main initializer function when the DOM is ready.
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 
 })();
+

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- These will be dynamically updated by JavaScript -->
-    <title>Loading Post...</title>
+    <title>Loading Post... | Hulo's Journal</title>
     <meta name="description" content="">
     <meta property="og:title" content="Loading Post...">
     <meta property="og:description" content="">
@@ -16,66 +16,113 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
+    <!-- highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+
     <style>
         :root {
-            --background: #0D1117;
+            --background: #0a0a0a;
             --foreground: #C9D1D9;
-            --accent-green: #238636;
+            --accent-green: #2ea043;
             --accent-amber: #FFB800;
             --border-color: #30363d;
+            --code-bg: #010409;
         }
+
+        html {
+            /* --- Custom Cursor --- */
+            cursor: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2V18M2 10H18' stroke='%232ea043' stroke-width='1.5'/%3E%3C/svg%3E") 10 10, auto;
+        }
+        
+        a, button {
+            cursor: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2V18M2 10H18' stroke='%232ea043' stroke-width='1.5'/%3E%3Ccircle cx='10' cy='10' r='2.5' fill='%232ea043'/%3E%3C/svg%3E") 10 10, pointer;
+        }
+        /* --- End Custom Cursor --- */
+
         body {
             background-color: var(--background);
             color: var(--foreground);
             font-family: 'Fira Code', monospace;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
         }
-        body.loaded {
-            opacity: 1;
-        }
-        .accent-text-green { color: var(--accent-green); }
-        .accent-text-amber { color: var(--accent-amber); }
-        .border-accent { border-color: var(--border-color); }
 
+        /* --- Custom Prose Styles for Markdown --- */
         .prose {
             color: var(--foreground);
+            line-height: 1.7;
         }
-        .prose h1, .prose h2, .prose h3 {
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
             color: var(--accent-green);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.3em;
+            margin-top: 1.5em;
         }
+        .prose h1 { font-size: 2em; }
+        .prose h2 { font-size: 1.5em; }
         .prose a {
             color: var(--accent-amber);
-            text-decoration: underline;
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent-amber);
+            transition: color 0.2s ease-in-out, border-bottom 0.2s ease-in-out;
         }
         .prose a:hover {
             color: var(--accent-green);
+            border-bottom-style: solid;
         }
         .prose blockquote {
-            border-left-color: var(--accent-green);
+            padding-left: 1em;
+            border-left: 0.25em solid var(--accent-green);
             color: #8b949e;
+            margin-left: 0;
         }
-        .prose code {
-            color: var(--foreground);
-            background-color: #161b22;
+        .prose code:not(pre *) {
+            color: #f0f6fc;
+            background-color: rgba(110,118,129,0.4);
             padding: 0.2em 0.4em;
             margin: 0;
             font-size: 85%;
             border-radius: 6px;
         }
         .prose pre {
-            background-color: #010409;
+            background-color: var(--code-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1em;
             overflow-x: auto;
+            font-size: 0.9em;
         }
         .prose pre code {
             background-color: transparent;
             padding: 0;
         }
+        .prose ul, .prose ol {
+            padding-left: 2em;
+        }
+        .prose li::marker {
+            color: var(--accent-green);
+        }
+        .prose hr {
+            border-color: var(--border-color);
+            border-top-width: 4px;
+            margin: 2em 0;
+        }
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .prose th, .prose td {
+            border: 1px solid var(--border-color);
+            padding: 0.5em 1em;
+        }
+        .prose th {
+            background-color: #161b22;
+        }
+        .prose tr:nth-child(2n) {
+            background-color: var(--code-bg);
+        }
+        /* --- End Prose Styles --- */
+
         .scanline {
             position: fixed;
             top: 0;
@@ -91,49 +138,111 @@
             0% { background-position: 0 0; }
             100% { background-position: 0 100%; }
         }
+
+        /* --- Click Animation --- */
+        .click-effect {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(46,160,67,0.8) 0%, rgba(46,160,67,0) 70%);
+            pointer-events: none;
+            animation: fire-burst 0.5s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes fire-burst {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
+        /* --- End Click Animation --- */
+
+        /* --- Terminal Window styles --- */
+        .terminal-window {
+            border: 1px solid #333;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .terminal-header {
+            background: #333;
+            padding: 8px 12px;
+        }
+        
+        .blinking-cursor {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { color: transparent }
+            50% { color: var(--accent-green); }
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen py-8 px-4 flex items-center justify-center">
     <div class="scanline"></div>
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- Header -->
-        <header class="flex justify-between items-center py-6 border-b-2 border-accent">
-            <div>
-                <a href="/index.html" class="text-2xl font-bold accent-text-green tracking-wider">[ Cyber_Journal ]</a>
-                <span class="text-sm accent-text-amber animate-pulse">_</span>
+    <div class="w-full max-w-4xl terminal-window bg-black/50 backdrop-blur-sm rounded-lg overflow-hidden">
+        <div class="terminal-header flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
             </div>
-            <nav class="flex space-x-4">
-                <a href="/index.html" class="hover:accent-text-green transition-colors">Home</a>
-                <a href="#" class="hover:accent-text-green transition-colors">About</a>
-                <a href="#" class="hover:accent-text-green transition-colors">Archive</a>
-            </nav>
-        </header>
-
-        <!-- Main Content: Post -->
-        <main class="mt-8">
-            <a href="/index.html" class="inline-block mb-8 accent-text-amber hover:accent-text-green transition-colors">&lt; Back to all posts</a>
-            <article id="post-content" class="prose prose-invert max-w-none lg:prose-lg">
-                <!-- Post content will be dynamically inserted here -->
-                <div id="loader" class="text-center py-12">
-                    <p class="accent-text-green text-lg">Decrypting transmission...</p>
-                    <p class="accent-text-amber animate-pulse">Loading content...</p>
-                </div>
-            </article>
-        </main>
-
-        <!-- Footer -->
-        <footer class="text-center mt-16 py-6 border-t-2 border-accent text-sm text-gray-400">
-            <p>&copy; <span id="copyright-year"></span> Cyber Journal. All rights reserved.</p>
-        </footer>
-
+            <div class="text-xs text-gray-400">
+                <a href="./index.html" class="hover:text-white transition-colors">--home</a>
+                <a href="./coming-soon.html" class="ml-4 hover:text-white transition-colors">--about</a>
+                <a href="./coming-soon.html" class="ml-4 hover:text-white transition-colors">--archive</a>
+            </div>
+        </div>
+        <div class="p-4 sm:p-8">
+             <a href="./index.html" class="inline-block mb-8 text-amber-400 hover:text-amber-300 transition-colors">&lt; Back to all posts</a>
+            <main>
+                <article id="post-content" class="prose prose-invert max-w-none lg:prose-lg">
+                    <!-- Post content will be dynamically inserted here -->
+                    <div id="loader" class="text-center py-12">
+                        <p class="text-green-400 text-lg">Decrypting transmission...</p>
+                        <p class="text-amber-400 animate-pulse">Loading content...</p>
+                    </div>
+                </article>
+            </main>
+            <p class="mt-12 text-gray-500 font-mono">End of transmission.<span class="blinking-cursor">_</span></p>
+            <footer class="text-center mt-8 pt-6 border-t border-gray-800 text-sm text-gray-500">
+                <p>&copy; <span id="copyright-year"></span> Rupam Ghosh (hulo). All rights reserved.</p>
+            </footer>
+        </div>
     </div>
+
 
     <!-- Marked.js for Markdown Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
+    <!-- highlight.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
     <!-- Custom JS -->
-    <script src="/assets/js/script.js"></script>
+    <script src="assets/js/script.js" defer></script>
+
+    <!-- Click animation script -->
+    <script>
+        document.addEventListener('click', function(e) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            document.body.appendChild(effect);
+            effect.style.left = e.clientX + 'px';
+            effect.style.top = e.clientY + 'px';
+            setTimeout(() => {
+                effect.remove();
+            }, 500);
+        });
+    </script>
 </body>
 </html>
+

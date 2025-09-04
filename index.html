@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Journal</title>
-    <meta name="description" content="A daily journal exploring the world of cybersecurity, development, and tech.">
+    <title>Hulo's Journal</title>
+    <meta name="description" content="A daily journal by Rupam Ghosh (hulo) exploring the world of cybersecurity, development, and tech.">
 
     <!-- Open Graph / Social Media -->
-    <meta property="og:title" content="Cyber Journal">
-    <meta property="og:description" content="A daily journal exploring the world of cybersecurity, development, and tech.">
+    <meta property="og:title" content="Hulo's Journal">
+    <meta property="og:description" content="A daily journal by Rupam Ghosh (hulo) exploring the world of cybersecurity, development, and tech.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://example.com/index.html">
+    <meta property="og:url" content="https://diary.hulobiral.online">
 
     <!-- Canonical Link -->
-    <link rel="canonical" href="https://example.com/index.html" />
+    <link rel="canonical" href="https://diary.hulobiral.online" />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,6 +35,20 @@
             --gradient-primary: linear-gradient(135deg, #64ffda 0%, #00bcd4 100%);
             --gradient-card: linear-gradient(145deg, #161616 0%, #1a1a1a 100%);
         }
+
+        html {
+            /* --- Custom Cursor --- */
+            cursor: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2V18M2 10H18' stroke='%2364ffda' stroke-width='1.5'/%3E%3C/svg%3E") 10 10, auto;
+        }
+        
+        a, button, .card-hover {
+            cursor: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 2V18M2 10H18' stroke='%2364ffda' stroke-width='1.5'/%3E%3Ccircle cx='10' cy='10' r='2.5' fill='%2364ffda'/%3E%3C/svg%3E") 10 10, pointer;
+        }
+
+        .search-input {
+            cursor: text;
+        }
+        /* --- End Custom Cursor --- */
 
         * {
             scrollbar-width: thin;
@@ -74,24 +88,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .glow-border {
-            border: 1px solid transparent;
-            background-clip: padding-box;
-            position: relative;
-        }
-
-        .glow-border::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            padding: 1px;
-            background: var(--gradient-primary);
-            border-radius: inherit;
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: xor;
-            -webkit-mask-composite: xor;
-        }
-
         .card-hover {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateY(0);
@@ -110,22 +106,7 @@
             position: relative;
             overflow: hidden;
         }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .btn-primary:hover::before {
-            left: 100%;
-        }
-
+        
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(100, 255, 218, 0.3);
@@ -136,6 +117,7 @@
             background: var(--bg-card);
             border-radius: 16px;
             overflow: hidden;
+            border: 1px solid var(--border-primary);
             transition: all 0.3s ease;
         }
 
@@ -158,40 +140,17 @@
             opacity: 0.7;
         }
 
+        /* Added to prevent browser's default focus outline on the input itself */
+        .search-input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
         .terminal-prompt {
             color: var(--text-accent);
             font-weight: 600;
             text-shadow: 0 0 10px var(--text-accent);
         }
-
-        .fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-        }
-
-        .slide-up {
-            animation: slideUp 0.6s ease-out forwards;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .stagger-1 { animation-delay: 0.1s; }
-        .stagger-2 { animation-delay: 0.2s; }
-        .stagger-3 { animation-delay: 0.3s; }
-        .stagger-4 { animation-delay: 0.4s; }
 
         .gradient-text {
             background: var(--gradient-primary);
@@ -200,44 +159,13 @@
             background-clip: text;
         }
 
-        .pulse-glow {
-            animation: pulseGlow 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% {
-                text-shadow: 0 0 5px var(--text-accent);
-                opacity: 0.8;
-            }
-            50% {
-                text-shadow: 0 0 15px var(--text-accent), 0 0 25px var(--text-accent);
-                opacity: 1;
-            }
-        }
-
         .nav-link {
             position: relative;
             transition: all 0.3s ease;
             padding: 8px 16px;
             border-radius: 8px;
         }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 50%;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-primary);
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
+        
         .nav-link:hover {
             color: var(--text-accent);
             background: rgba(100, 255, 218, 0.1);
@@ -263,10 +191,6 @@
             opacity: 0.5;
         }
 
-        .loader-animation {
-            position: relative;
-        }
-
         .loader-animation::after {
             content: '';
             display: inline-block;
@@ -282,11 +206,49 @@
             51%, 100% { opacity: 0; }
         }
 
+        /* Animation visibility states */
+        .fade-in, .slide-up {
+            opacity: 0;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .slide-up {
+             transform: translateY(20px);
+        }
+        .fade-in.is-visible, .slide-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         @media (max-width: 768px) {
             .post-card {
                 padding: 1.5rem;
             }
         }
+        
+        /* --- Click Animation --- */
+        .click-effect {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(100,255,218,0.8) 0%, rgba(100,255,218,0) 70%);
+            pointer-events: none;
+            animation: fire-burst 0.5s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes fire-burst {
+            from {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            to {
+                transform: translate(-50%, -50%) scale(3);
+                opacity: 0;
+            }
+        }
+        /* --- End Click Animation --- */
     </style>
 </head>
 <body class="min-h-screen">
@@ -302,20 +264,20 @@
                     <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
                     <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                 </div>
-                <a href="/index.html" class="text-3xl lg:text-4xl font-bold gradient-text tracking-tight font-mono block mt-3">
-                    cyber_journal.exe
+                <a href="./index.html" class="text-3xl lg:text-4xl font-bold gradient-text tracking-tight font-mono block mt-3">
+                    hulo_journal.exe
                 </a>
                 <p class="text-sm text-gray-400 mt-2 font-mono">Exploring cybersecurity • development • tech</p>
             </div>
             <nav class="flex space-x-1 bg-gray-900/50 rounded-xl p-2 glass-effect">
-                <a href="/index.html" class="nav-link font-medium">Home</a>
-                <a href="#" class="nav-link font-medium">About</a>
-                <a href="#" class="nav-link font-medium">Archive</a>
+                <a href="./index.html" class="nav-link font-medium">Home</a>
+                <a href="./coming-soon.html" class="nav-link font-medium">About</a>
+                <a href="./coming-soon.html" class="nav-link font-medium">Archive</a>
             </nav>
         </header>
 
         <!-- Search Bar -->
-        <section class="slide-up stagger-1 mb-12">
+        <section class="slide-up mb-12">
             <div class="search-container p-4">
                 <div class="flex items-center space-x-3">
                     <span class="terminal-prompt font-mono text-lg">$</span>
@@ -327,78 +289,10 @@
 
         <!-- Main Content -->
         <main id="post-list" class="space-y-8">
-            <!-- Sample Posts for Demo -->
-            <article class="slide-up stagger-2 post-card card-hover">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold mb-2 text-white">Advanced Threat Detection with ML</h2>
-                        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
-                            <span class="font-mono">2024-09-04</span>
-                            <span class="px-2 py-1 bg-cyan-900/30 text-cyan-300 rounded-md font-mono text-xs">cybersecurity</span>
-                            <span class="px-2 py-1 bg-purple-900/30 text-purple-300 rounded-md font-mono text-xs">machine-learning</span>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-gray-300 leading-relaxed">
-                    Exploring how machine learning algorithms are revolutionizing threat detection in modern cybersecurity frameworks. 
-                    This post covers implementation strategies, performance metrics, and real-world applications in enterprise environments.
-                </p>
-                <div class="mt-6 flex items-center justify-between">
-                    <span class="text-sm text-gray-500 font-mono">5 min read</span>
-                    <button class="text-cyan-400 hover:text-cyan-300 transition-colors font-medium">
-                        Read more →
-                    </button>
-                </div>
-            </article>
-
-            <article class="slide-up stagger-3 post-card card-hover">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold mb-2 text-white">Building Secure APIs with Node.js</h2>
-                        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
-                            <span class="font-mono">2024-09-03</span>
-                            <span class="px-2 py-1 bg-green-900/30 text-green-300 rounded-md font-mono text-xs">development</span>
-                            <span class="px-2 py-1 bg-blue-900/30 text-blue-300 rounded-md font-mono text-xs">security</span>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-gray-300 leading-relaxed">
-                    A comprehensive guide to implementing security best practices in Node.js applications. 
-                    From authentication strategies to input validation, we'll cover everything you need to build bulletproof APIs.
-                </p>
-                <div class="mt-6 flex items-center justify-between">
-                    <span class="text-sm text-gray-500 font-mono">8 min read</span>
-                    <button class="text-cyan-400 hover:text-cyan-300 transition-colors font-medium">
-                        Read more →
-                    </button>
-                </div>
-            </article>
-
-            <article class="slide-up stagger-4 post-card card-hover">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold mb-2 text-white">Zero Trust Architecture Deep Dive</h2>
-                        <div class="flex flex-wrap items-center gap-4 text-sm text-gray-400">
-                            <span class="font-mono">2024-09-02</span>
-                            <span class="px-2 py-1 bg-red-900/30 text-red-300 rounded-md font-mono text-xs">architecture</span>
-                            <span class="px-2 py-1 bg-yellow-900/30 text-yellow-300 rounded-md font-mono text-xs">enterprise</span>
-                        </div>
-                    </div>
-                </div>
-                <p class="text-gray-300 leading-relaxed">
-                    Understanding the principles and implementation of Zero Trust security models. 
-                    Learn how to design and deploy Zero Trust architectures that protect against modern cyber threats.
-                </p>
-                <div class="mt-6 flex items-center justify-between">
-                    <span class="text-sm text-gray-500 font-mono">12 min read</span>
-                    <button class="text-cyan-400 hover:text-cyan-300 transition-colors font-medium">
-                        Read more →
-                    </button>
-                </div>
-            </article>
+            <!-- Posts will be loaded here by script.js -->
 
             <!-- Loader -->
-            <div id="loader" class="hidden text-center py-16">
+            <div id="loader" class="text-center py-16">
                 <div class="inline-flex items-center space-x-4">
                     <div class="w-6 h-6 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
                     <p class="text-cyan-400 font-mono loader-animation">Loading entries</p>
@@ -407,14 +301,14 @@
         </main>
 
         <!-- No Results -->
-        <div id="no-results" class="hidden text-center py-16">
+        <div id="no-results" style="display: none;" class="text-center py-16">
             <div class="text-6xl mb-4">🔍</div>
             <p class="text-xl text-gray-300 mb-2 font-mono">Search query returned 0 results</p>
             <p class="text-gray-500">Try adjusting your search terms</p>
         </div>
 
         <!-- Pagination -->
-        <nav id="pagination-controls" class="hidden flex justify-center items-center mt-16 space-x-4">
+        <nav id="pagination-controls" style="display: none;" class="flex justify-center items-center mt-16 space-x-4">
             <button id="prev-page" class="px-6 py-3 btn-primary rounded-xl font-mono disabled:opacity-50 disabled:cursor-not-allowed">
                 ← Prev
             </button>
@@ -425,35 +319,27 @@
         </nav>
 
         <!-- Footer -->
-        <footer class="slide-up stagger-4 text-center mt-20 pt-12 border-t border-gray-800">
+        <footer class="slide-up text-center mt-20 pt-12 border-t border-gray-800">
             <div class="flex justify-center space-x-8 mb-6">
-                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
+                <a href="https://github.com/hul0" class="text-gray-400 hover:text-cyan-400 transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                 </a>
-                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                    </svg>
+                <a href="https://x.com/hulobiral" class="text-gray-400 hover:text-cyan-400 transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
                 </a>
-                <a href="#" class="text-gray-400 hover:text-cyan-400 transition-colors">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
+                <a href="https://linkedin.com/in/hulo" class="text-gray-400 hover:text-cyan-400 transition-colors">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
                 </a>
             </div>
             <p class="text-sm text-gray-500 font-mono">
-                © <span id="copyright-year">2024</span> Cyber Journal. Crafted with 💚 for security enthusiasts.
+                © <span id="copyright-year"></span> Rupam Ghosh (hulo). All rights reserved.
             </p>
         </footer>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="assets/js/script.js" defer></script>
     <script>
-        // Initialize copyright year
-        document.getElementById('copyright-year').textContent = new Date().getFullYear();
-
         // Keyboard shortcut for search
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -462,86 +348,18 @@
             }
         });
 
-        // Search functionality placeholder
-        const searchInput = document.getElementById('search-bar');
-        const postList = document.getElementById('post-list');
-        const noResults = document.getElementById('no-results');
-
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            
-            if (query.trim() === '') {
-                postList.style.display = 'block';
-                noResults.classList.add('hidden');
-            } else {
-                // Simple demo search - in real app, this would filter posts
-                const articles = postList.querySelectorAll('article');
-                let hasResults = false;
-                
-                articles.forEach(article => {
-                    const title = article.querySelector('h2').textContent.toLowerCase();
-                    const content = article.querySelector('p').textContent.toLowerCase();
-                    
-                    if (title.includes(query) || content.includes(query)) {
-                        article.style.display = 'block';
-                        hasResults = true;
-                    } else {
-                        article.style.display = 'none';
-                    }
-                });
-
-                if (!hasResults) {
-                    noResults.classList.remove('hidden');
-                } else {
-                    noResults.classList.add('hidden');
-                }
-            }
-        });
-
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add loading states for dynamic content
-        function simulateLoading() {
-            const loader = document.getElementById('loader');
-            loader.classList.remove('hidden');
-            
+        // Click animation script
+        document.addEventListener('click', function(e) {
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            document.body.appendChild(effect);
+            effect.style.left = e.clientX + 'px';
+            effect.style.top = e.clientY + 'px';
             setTimeout(() => {
-                loader.classList.add('hidden');
-                // In real app, this would load actual content
-            }, 2000);
-        }
-
-        // Intersection Observer for scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all elements with animation classes
-        document.querySelectorAll('.slide-up, .fade-in').forEach(el => {
-            observer.observe(el);
+                effect.remove();
+            }, 500);
         });
     </script>
 </body>
 </html>
+
