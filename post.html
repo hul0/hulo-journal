@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- These will be dynamically updated by JavaScript -->
+    <title>Loading Post...</title>
+    <meta name="description" content="">
+    <meta property="og:title" content="Loading Post...">
+    <meta property="og:description" content="">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="">
+    <link rel="canonical" href="">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --background: #0D1117;
+            --foreground: #C9D1D9;
+            --accent-green: #238636;
+            --accent-amber: #FFB800;
+            --border-color: #30363d;
+        }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Fira Code', monospace;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        body.loaded {
+            opacity: 1;
+        }
+        .accent-text-green { color: var(--accent-green); }
+        .accent-text-amber { color: var(--accent-amber); }
+        .border-accent { border-color: var(--border-color); }
+
+        .prose {
+            color: var(--foreground);
+        }
+        .prose h1, .prose h2, .prose h3 {
+            color: var(--accent-green);
+        }
+        .prose a {
+            color: var(--accent-amber);
+            text-decoration: underline;
+        }
+        .prose a:hover {
+            color: var(--accent-green);
+        }
+        .prose blockquote {
+            border-left-color: var(--accent-green);
+            color: #8b949e;
+        }
+        .prose code {
+            color: var(--foreground);
+            background-color: #161b22;
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 6px;
+        }
+        .prose pre {
+            background-color: #010409;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1em;
+            overflow-x: auto;
+        }
+        .prose pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            animation: scan 7.5s linear infinite;
+        }
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="scanline"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-center py-6 border-b-2 border-accent">
+            <div>
+                <a href="/index.html" class="text-2xl font-bold accent-text-green tracking-wider">[ Cyber_Journal ]</a>
+                <span class="text-sm accent-text-amber animate-pulse">_</span>
+            </div>
+            <nav class="flex space-x-4">
+                <a href="/index.html" class="hover:accent-text-green transition-colors">Home</a>
+                <a href="#" class="hover:accent-text-green transition-colors">About</a>
+                <a href="#" class="hover:accent-text-green transition-colors">Archive</a>
+            </nav>
+        </header>
+
+        <!-- Main Content: Post -->
+        <main class="mt-8">
+            <a href="/index.html" class="inline-block mb-8 accent-text-amber hover:accent-text-green transition-colors">&lt; Back to all posts</a>
+            <article id="post-content" class="prose prose-invert max-w-none lg:prose-lg">
+                <!-- Post content will be dynamically inserted here -->
+                <div id="loader" class="text-center py-12">
+                    <p class="accent-text-green text-lg">Decrypting transmission...</p>
+                    <p class="accent-text-amber animate-pulse">Loading content...</p>
+                </div>
+            </article>
+        </main>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 py-6 border-t-2 border-accent text-sm text-gray-400">
+            <p>&copy; <span id="copyright-year"></span> Cyber Journal. All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="/assets/js/script.js"></script>
+</body>
+</html>

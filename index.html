@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Journal</title>
+    <meta name="description" content="A daily journal exploring the world of cybersecurity, development, and tech.">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Cyber Journal">
+    <meta property="og:description" content="A daily journal exploring the world of cybersecurity, development, and tech.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://example.com/index.html">
+    <!-- <meta property="og:image" content="https://example.com/assets/og-image.png"> -->
+
+    <!-- Canonical Link -->
+    <link rel="canonical" href="https://example.com/index.html" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --background: #0D1117;
+            --foreground: #C9D1D9;
+            --accent-green: #238636;
+            --accent-amber: #FFB800;
+            --border-color: #30363d;
+        }
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Fira Code', monospace;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        body.loaded {
+            opacity: 1;
+        }
+        .hacker-terminal {
+            background-color: #010409;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
+        }
+        .accent-text-green { color: var(--accent-green); }
+        .accent-text-amber { color: var(--accent-amber); }
+        .border-accent { border-color: var(--border-color); }
+        .search-input {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--foreground);
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 5px var(--accent-green);
+        }
+        .btn-primary {
+            background-color: var(--accent-green);
+            color: var(--background);
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #2ea043;
+            box-shadow: 0 0 8px #2ea043;
+        }
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 6px 100%;
+            animation: scan 7.5s linear infinite;
+        }
+        @keyframes scan {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="scanline"></div>
+
+    <div id="app-container" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-center py-6 border-b-2 border-accent">
+            <div class="mb-4 sm:mb-0">
+                <a href="/index.html" class="text-2xl font-bold accent-text-green tracking-wider">[ Cyber_Journal ]</a>
+                <span class="text-sm accent-text-amber animate-pulse">_</span>
+            </div>
+            <nav class="flex space-x-4 text-sm sm:text-base">
+                <a href="/index.html" class="hover:accent-text-green transition-colors">Home</a>
+                <a href="#" class="hover:accent-text-green transition-colors">About</a>
+                <a href="#" class="hover:accent-text-green transition-colors">Archive</a>
+            </nav>
+        </header>
+
+        <!-- Search Bar -->
+        <section class="my-8">
+            <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 accent-text-amber">></span>
+                <input type="text" id="search-bar" placeholder="search(posts)..." class="w-full pl-8 pr-4 py-2 rounded-md search-input focus:ring-0">
+            </div>
+        </section>
+
+        <!-- Main Content: Post List -->
+        <main id="post-list" class="space-y-12">
+            <!-- Posts will be dynamically inserted here -->
+            <div id="loader" class="text-center py-12">
+                <p class="accent-text-green text-lg">Initializing content stream...</p>
+                <p class="accent-text-amber animate-pulse">Loading logs...</p>
+            </div>
+        </main>
+        
+        <div id="no-results" class="hidden text-center py-12">
+            <p class="accent-text-amber text-lg">Cmd_Not_Found: No matching entries.</p>
+        </div>
+
+        <!-- Pagination -->
+        <nav id="pagination-controls" class="flex justify-between items-center mt-12 py-4 border-t-2 border-accent hidden">
+            <button id="prev-page" class="px-4 py-2 rounded-md btn-primary disabled:opacity-50 disabled:cursor-not-allowed">&lt; Previous</button>
+            <span id="page-indicator" class="accent-text-foreground">Page 1 of 1</span>
+            <button id="next-page" class="px-4 py-2 rounded-md btn-primary disabled:opacity-50 disabled:cursor-not-allowed">Next &gt;</button>
+        </nav>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16 py-6 border-t-2 border-accent text-sm text-gray-400">
+            <p>&copy; <span id="copyright-year"></span> Cyber Journal. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="hover:accent-text-amber transition-colors">GitHub</a>
+                <a href="#" class="hover:accent-text-amber transition-colors">Twitter</a>
+                <a href="#" class="hover:accent-text-amber transition-colors">LinkedIn</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Marked.js for Markdown Parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/assets/js/script.js"></script>
+</body>
+</html>
